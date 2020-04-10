@@ -13,6 +13,7 @@ from sklearn.multiclass import OneVsRestClassifier
 from sklearn.metrics import f1_score
 
 app = Flask(__name__)
+app.config['JSON_AS_ASCII'] = False
 
 def load_models():
     file_name = "models/finalized_model.sav"
@@ -51,7 +52,7 @@ def predict():
     print(prediction)
     #prediction = prediction.encode('utf8')
     print(prediction.encode('utf-8'))
-    response = json.dumps({'response': prediction}, )
+    response = json.dumps({'response': prediction}, ensure_ascii=False)
     #todo encoding
     return response, 200
 
