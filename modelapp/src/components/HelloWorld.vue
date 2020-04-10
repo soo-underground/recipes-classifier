@@ -35,6 +35,8 @@
 <script>
   import axios from 'axios'
 
+
+
   export default {
     name: 'HelloWorld',
     data: () => ({
@@ -43,20 +45,22 @@
     }),
     methods: {
     submit () {
-      axios.get('https://recipes-classifier-2.herokuapp.com/predict',
+    axios({
+      name: 'HelloWorld',
+      method: 'post',
+      url: 'https://recipes-classifier-2.herokuapp.com/predict',
+      withCredentials: false,
+      headers: {'Content-Type': 'application/json'},
 
-      {
-        input: this.sepalLength,
-      })
-      .then((response) => {
-        this.predictedClass = response.data.class
-      })
+      data: {
+       input: this.sepalLength
+      }
+    }).then((response) => {
+        this.predictedClass = response.data.response
+      });
     },
     clear () {
       this.sepalLength = ''
-      this.sepalWidth = ''
-      this.petalLength = ''
-      this.petalWidth = ''
     }
   }
 }

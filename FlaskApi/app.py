@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import flask
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 import json
 import pickle
 import nltk
@@ -13,7 +14,9 @@ from sklearn.multiclass import OneVsRestClassifier
 from sklearn.metrics import f1_score
 
 app = Flask(__name__)
+CORS(app)
 app.config['JSON_AS_ASCII'] = False
+
 
 def load_models():
     file_name = "models/finalized_model.sav"
@@ -33,7 +36,7 @@ def remove_stopwords(text):
     no_stopword_text = [w for w in text.split() if not w in stop_words]
     return ' '.join(no_stopword_text)
 
-@app.route('/predict', methods=['GET'])
+@app.route('/predict', methods=['POST'])
 
 def predict():
 
