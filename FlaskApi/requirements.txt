@@ -1,0 +1,9 @@
+Flask
+Jinja2
+Werkzeug
+certifi
+chardet
+gunicorn
+requests
+nltk
+sklearn
