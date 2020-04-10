@@ -1,3 +1,4 @@
 products.csv
 scraper-bak.py
 FlaskApi/vir_env/
+FlaskApi/__pycache__/
