@@ -1,8 +1,8 @@
 products.csv
 products2.csv
 test(2).csv
-New Лист Microsoft Excel.xlsx
-scraper-bak.py
+utils/scraper-bak.py
 FlaskApi/vir_env/
 FlaskApi/__pycache__/
 node_modules
+data/
