@@ -6,3 +6,4 @@ FlaskApi/vir_env/
 FlaskApi/__pycache__/
 node_modules
 data/
+jupyter notebooks/.ipynb_checkpoints
