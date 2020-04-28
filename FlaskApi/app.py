@@ -35,7 +35,7 @@ def load_binarizer():
 
 def clean_text(text):
     text = re.sub("\'", "", text)
-    text = re.sub("[^а-яА-ЯЁё]"," ",text)
+    text = re.sub("[^a-zA-Z]"," ",text)
     text = ' '.join(text.split())
     text = text.lower()
     return text
