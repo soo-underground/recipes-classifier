@@ -23,6 +23,12 @@ def load_models():
     loaded_model = pickle.load(open('models/finalized_model.sav', 'rb'))
     return loaded_model
 
+def load_classifier():
+    classifier = pickle.load(open('models/multilabel_model.sav', 'rb'))
+    return classifier
+
+
+
 def clean_text(text):
     text = re.sub("\'", "", text)
     text = re.sub("[^а-яА-ЯЁё]"," ",text)
