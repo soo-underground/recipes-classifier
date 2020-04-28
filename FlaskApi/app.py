@@ -55,17 +55,12 @@ def remove_stopwords(text):
 @app.route('/predict', methods=['POST'])
 
 def predict():
-
-    # parse input features from request
-    # todo:
     request_json = request.get_json()
     x = str(request_json['input'])
     print(x)
-    #x = 'борщ'
     classifier = load_classifier()
     tfidf = load_tfidf()
     binarizer = load_binarizer()
-
     x = clean_text(x)
     x = remove_stopwords(x)
     x = lemmatize_text(x)
@@ -73,16 +68,10 @@ def predict():
     q_vec = load_tfidf().transform([x])
     prediction = load_classifier().predict(q_vec)
     prediction = load_binarizer().inverse_transform(prediction)
-    print(prediction)
     prediction = str(prediction).strip('[()]').replace("'", "")
-    print(prediction)
-    #prediction = ' '.join(prediction)
-    #print(prediction)
-    #prediction = prediction.encode('utf8')
     print(prediction.encode('utf-8'))
     prediction = prediction.split(", ")
     response = json.dumps({'response': prediction}, ensure_ascii=False)
-    #todo encoding
     return response, 200
 
 if __name__ == '__main__':
