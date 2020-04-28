@@ -12,10 +12,14 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.metrics import f1_score
+import requests
+from string import punctuation
 
 app = Flask(__name__)
 CORS(app)
 app.config['JSON_AS_ASCII'] = False
+
+auth = ''
 
 def load_classifier():
     classifier = pickle.load(open('models/multilabel_model.sav', 'rb'))
@@ -55,8 +59,19 @@ def remove_stopwords(text):
 @app.route('/predict', methods=['POST'])
 
 def predict():
+    global auth
     request_json = request.get_json()
     x = str(request_json['input'])
+    print(x)
+
+    string = 'https://translate.yandex.net/api/v1.5/tr.json/translate?key=' + \
+        auth + '&text=' + x + '&lang=ru-en'
+    r = requests.get(string)
+    text = r.text[36:]
+    text = text.strip('"]}')
+    text = re.sub(",", "", text)
+    x = text
+
     print(x)
     classifier = load_classifier()
     tfidf = load_tfidf()
@@ -69,7 +84,19 @@ def predict():
     prediction = load_classifier().predict(q_vec)
     prediction = load_binarizer().inverse_transform(prediction)
     prediction = str(prediction).strip('[()]').replace("'", "")
-    print(prediction.encode('utf-8'))
+
+    string = 'https://translate.yandex.net/api/v1.5/tr.json/translate?key=' + \
+        auth + '&text=' + prediction + '&lang=en-ru'
+    r = requests.get(string)
+    text = r.text[36:]
+    text = text.strip('"]}')
+    prediction = re.sub(",", "", text)
+
+    print(prediction)
+    #print(prediction.encode('utf-8'))
+
+
+
     prediction = prediction.split(", ")
     response = json.dumps({'response': prediction}, ensure_ascii=False)
     return response, 200
