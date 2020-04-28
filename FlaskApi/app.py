@@ -17,17 +17,17 @@ app = Flask(__name__)
 CORS(app)
 app.config['JSON_AS_ASCII'] = False
 
-
-def load_models():
-    file_name = "models/finalized_model.sav"
-    loaded_model = pickle.load(open('models/finalized_model.sav', 'rb'))
-    return loaded_model
-
 def load_classifier():
     classifier = pickle.load(open('models/multilabel_model.sav', 'rb'))
     return classifier
 
+def load_tfidf():
+    tfidf = pickle.load(open('models/tfidf.sav', 'rb'))
+    return tfidf
 
+def load_binarizer():
+    binarizer = pickle.load(open('models/multilabel_binarizer.sav', 'rb'))
+    return binarizer
 
 def clean_text(text):
     text = re.sub("\'", "", text)
@@ -36,8 +36,18 @@ def clean_text(text):
     text = text.lower()
     return text
 
+from nltk.stem import WordNetLemmatizer
+wordnet_lemmatizer = WordNetLemmatizer()
+def lemmatize_text(text)
+    lemmatized_text=[]
+    sentence_words = nltk.word_tokenize(text)
+    for word in sentence_words:
+        lemmatized_text.append(wordnet_lemmatizer.lemmatize(word, pos="v"))
+    lemmatized_text = ' '.join(lemmatized_text)
+    return lemmatized_text
+
 nltk.download('stopwords')
-stop_words = set(stopwords.words('russian'))
+stop_words = set(stopwords.words('english'))
 def remove_stopwords(text):
     no_stopword_text = [w for w in text.split() if not w in stop_words]
     return ' '.join(no_stopword_text)
@@ -52,7 +62,10 @@ def predict():
     x = str(request_json['input'])
     print(x)
     #x = 'борщ'
-    loaded_model = load_models()
+    classifier = load_classifier()
+    tfidf = load_tfidf()
+    binarizer = load_binarizer()
+
     x = clean_text(x)
     x = remove_stopwords(x)
     tfidf_loaded = pickle.load(open('models/tfidf.pickle', 'rb'))
