@@ -74,12 +74,13 @@ def predict():
     prediction = load_classifier().predict(q_vec)
     prediction = load_binarizer().inverse_transform(prediction)
     print(prediction)
-    prediction = str(prediction).strip('[()]')
+    prediction = str(prediction).strip('[()]').replace("'", "")
     print(prediction)
     #prediction = ' '.join(prediction)
     #print(prediction)
     #prediction = prediction.encode('utf8')
     print(prediction.encode('utf-8'))
+    prediction = prediction.split(", ")
     response = json.dumps({'response': prediction}, ensure_ascii=False)
     #todo encoding
     return response, 200
