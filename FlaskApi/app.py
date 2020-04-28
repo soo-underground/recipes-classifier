@@ -38,7 +38,7 @@ def clean_text(text):
 
 from nltk.stem import WordNetLemmatizer
 wordnet_lemmatizer = WordNetLemmatizer()
-def lemmatize_text(text)
+def lemmatize_text(text):
     lemmatized_text=[]
     sentence_words = nltk.word_tokenize(text)
     for word in sentence_words:
@@ -68,10 +68,16 @@ def predict():
 
     x = clean_text(x)
     x = remove_stopwords(x)
+    x = lemmatize_text(x)
     tfidf_loaded = pickle.load(open('models/tfidf.pickle', 'rb'))
-    q_vec = tfidf_loaded.transform([x])
-    prediction = loaded_model.predict(q_vec)[0]
+    q_vec = load_tfidf().transform([x])
+    prediction = load_classifier().predict(q_vec)
+    prediction = load_binarizer().inverse_transform(prediction)
     print(prediction)
+    prediction = str(prediction).strip('[()]')
+    print(prediction)
+    #prediction = ' '.join(prediction)
+    #print(prediction)
     #prediction = prediction.encode('utf8')
     print(prediction.encode('utf-8'))
     response = json.dumps({'response': prediction}, ensure_ascii=False)
