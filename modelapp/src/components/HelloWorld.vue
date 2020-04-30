@@ -28,8 +28,21 @@
 
 <!-- END: IMPORTANT PART! -->
       </v-flex>
+
+
     </v-layout>
+
+
+    <p> </p>
+    <p> <b> Получить ответ напрямую от бекенда: </b> </p>
+    <p> </p>
+    <p> curl --location --request POST 'https://recipes-classifier-2.herokuapp.com/predict'  </p>
+    <p>--header 'Content-Type: application/json'  </p>
+    <p>--header 'Content-Type: text/plain'  </p>
+    <p>--data-raw '{"input":"Рецепт борща"}'</p>
   </v-container>
+
+
 </template>
 
 <script>
