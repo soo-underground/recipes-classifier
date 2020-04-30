@@ -1,10 +1,8 @@
 <template>
   <v-app>
-    <v-toolbar app>
-      <v-toolbar-title class="headline text-uppercase">
-        <span class="font-weight-light">Подбор тегов к рецептам</span>
-      </v-toolbar-title>
-    </v-toolbar>
+  <v-app-bar color="grey" dark app >
+  <v-toolbar-title>Подбор тегов к рецептам</v-toolbar-title>
+</v-app-bar>
 
     <v-content>
       <HelloWorld/>

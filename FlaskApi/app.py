@@ -51,6 +51,8 @@ def lemmatize_text(text):
     return lemmatized_text
 
 nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('punkt')
 stop_words = set(stopwords.words('english'))
 def remove_stopwords(text):
     no_stopword_text = [w for w in text.split() if not w in stop_words]
@@ -90,7 +92,8 @@ def predict():
     r = requests.get(string)
     text = r.text[36:]
     text = text.strip('"]}')
-    prediction = re.sub(",", "", text)
+    prediction = text
+    #prediction = re.sub(",", "", text)
 
     print(prediction)
     #print(prediction.encode('utf-8'))
