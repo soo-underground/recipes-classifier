@@ -19,7 +19,9 @@ app = Flask(__name__)
 CORS(app)
 app.config['JSON_AS_ASCII'] = False
 
-auth = ''
+with open('YaTranslateKey.key', 'r') as file:
+    auth = file.read().replace('\n', '')
+print(auth)
 
 def load_classifier():
     classifier = pickle.load(open('models/multilabel_model.sav', 'rb'))
@@ -81,24 +83,21 @@ def predict():
     x = clean_text(x)
     x = remove_stopwords(x)
     x = lemmatize_text(x)
-    tfidf_loaded = pickle.load(open('models/tfidf.pickle', 'rb'))
-    q_vec = load_tfidf().transform([x])
-    prediction = load_classifier().predict(q_vec)
-    prediction = load_binarizer().inverse_transform(prediction)
+    q_vec = tfidf.transform([x])
+    q_pred = classifier.predict_proba(q_vec)
+
+    suggested_labels=[]
+    counter = 0
+    for x in binarizer.classes_:
+        proba  = round(q_pred[0][counter],2)
+        if proba > 0.75:
+            suggested_labels.append(str(x))
+        counter +=1
+    prediction=suggested_labels
+
     prediction = str(prediction).strip('[()]').replace("'", "")
 
-    string = 'https://translate.yandex.net/api/v1.5/tr.json/translate?key=' + \
-        auth + '&text=' + prediction + '&lang=en-ru'
-    r = requests.get(string)
-    text = r.text[36:]
-    text = text.strip('"]}')
-    prediction = text
-    #prediction = re.sub(",", "", text)
-
-    print(prediction)
-    #print(prediction.encode('utf-8'))
-
-
+    print('prediction:' + prediction)
 
     prediction = prediction.split(", ")
     response = json.dumps({'response': prediction}, ensure_ascii=False)
