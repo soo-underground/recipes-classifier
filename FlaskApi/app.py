@@ -21,7 +21,6 @@ app.config['JSON_AS_ASCII'] = False
 
 with open('YaTranslateKey.key', 'r') as file:
     auth = file.read().replace('\n', '')
-print(auth)
 
 def load_classifier():
     classifier = pickle.load(open('models/multilabel_model.sav', 'rb'))
@@ -66,7 +65,6 @@ def predict():
     global auth
     request_json = request.get_json()
     x = str(request_json['input'])
-    print(x)
 
     string = 'https://translate.yandex.net/api/v1.5/tr.json/translate?key=' + \
         auth + '&text=' + x + '&lang=ru-en'
