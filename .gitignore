@@ -8,3 +8,4 @@ node_modules
 data/
 jupyter notebooks/.ipynb_checkpoints
 front-small.png
+FlaskApi/YaTranslateKey.key
