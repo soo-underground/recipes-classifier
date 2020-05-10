@@ -20,7 +20,7 @@ CORS(app)
 app.config['JSON_AS_ASCII'] = False
 
 with open('YaTranslateKey.key', 'r') as file:
-    auth = file.read().replace('\n', '')
+    auth =file.read().replace('\n', '')
 
 def load_classifier():
     classifier = pickle.load(open('models/multilabel_model.sav', 'rb'))
