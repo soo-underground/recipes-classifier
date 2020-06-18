@@ -1,0 +1,10 @@
+version: '0.1'
+services:
+  FlaskApi:
+    build: .
+    ports:
+    - "5000:5000"
+  modelapp:
+    build: .
+    ports:
+        - "7000:7000"
