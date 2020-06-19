@@ -4,4 +4,4 @@ docker-compose up
 
 docker ps
 
-docker exec -it <id> bash
+docker exec -it docker-experiments_flask-api bash

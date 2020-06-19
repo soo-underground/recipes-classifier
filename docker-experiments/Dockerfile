@@ -1,5 +1,8 @@
 FROM python:3.8-slim
 
-COPY . .
+COPY . /root
 
-RUN pip install flask
+WORKDIR /root
+
+RUN pip install flask gunicorn
+#RUN pip install gunicorn

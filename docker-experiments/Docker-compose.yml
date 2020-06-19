@@ -5,11 +5,14 @@ services:
     command: "python -V"
     environment: 
       - FLASK_APP=hello.py
-    command: "flask run --host=0.0.0.0"
+      - FLASK_DEBUG=1 
+      - PYTHONUNBUFFERED=True
+    command: gunicorn -w 1 -b 0.0.0.0:5000 hello:app --reload
+    #command: "flask run --host=0.0.0.0"
     ports:
-    - "5000:5000"
+    - "5000:5000" 
     volumes: 
-    - ./:/
+    - ./:/root
   modelapp:
     build: .
     ports:
