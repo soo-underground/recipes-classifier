@@ -8,7 +8,7 @@ def hello_world():
 
 @app.route('/name/<myname>')
 def hello_name(myname):
-    print('log: new request from %s!!!' % myname)
+    app.logger.info('log: new request from %s' % myname)
     return 'Hello, %s!!!' % myname
 
 def mean(numbers):
