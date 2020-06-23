@@ -1,5 +1,8 @@
 from flask import Flask
+from flask.logging import create_logger
+
 app = Flask(__name__)
+LOG = create_logger(app)
 
 @app.route('/')
 def hello_world():
@@ -8,7 +11,7 @@ def hello_world():
 
 @app.route('/name/<myname>')
 def hello_name(myname):
-    app.logger.info('log: new request from %s' % myname)
+    LOG.info('log: new request from %s' % myname)
     return 'Hello, %s!!!' % myname
 
 def mean(numbers):
