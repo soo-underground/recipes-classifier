@@ -4,4 +4,4 @@ docker-compose up
 
 docker ps
 
-docker exec -it docker-experiments_flask-api bash
+docker exec -it docker-experiments_flask-api python train-model.py

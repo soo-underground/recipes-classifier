@@ -3,6 +3,7 @@ from flask.logging import create_logger
 import numpy as np
 from sklearn import datasets
 from sklearn.neighbors import KNeighborsClassifier
+from joblib import dump, load
 
 app = Flask(__name__)
 LOG = create_logger(app)
@@ -33,26 +34,7 @@ def iris(param):
     param = param.split(',')
     param = [float(param) for param in param]
 
-    LOG.info(param)
-
-    iris = datasets.load_iris()
-    iris_X = iris.data 
-    iris_y = iris.target 
-
-    np.random.seed(0)
-    indices = np.random.permutation(len(iris_X))
-    iris_X_train = iris_X[indices[:-10]] 
-    iris_y_train = iris_y[indices[:-10]] 
-    iris_X_test = iris_X[indices[-10:]] 
-    iris_y_test = iris_y[indices[-10:]]
-
-    knn = KNeighborsClassifier()
-    knn.fit(iris_X_train, iris_y_train) 
-    KNeighborsClassifier(algorithm='auto', leaf_size=30, metric='minkowski',
-                         metric_params=None, n_jobs=1, n_neighbors=5, p=2,
-                         weights='uniform'
-                         )
-    knn.predict(iris_X_test)
+    knn = load('knn.pkl')
 
     param = np.array(param).reshape(1,-1)
     predict = knn.predict(param)
