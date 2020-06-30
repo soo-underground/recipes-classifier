@@ -7,6 +7,7 @@ from joblib import dump, load
 
 app = Flask(__name__)
 LOG = create_logger(app)
+knn = load('knn.pkl')
 
 @app.route('/')
 def hello_world():
@@ -34,9 +35,8 @@ def iris(param):
     param = param.split(',')
     param = [float(param) for param in param]
 
-    knn = load('knn.pkl')
-
     param = np.array(param).reshape(1,-1)
     predict = knn.predict(param)
+    print(str(predict))
 
     return str(predict)
