@@ -40,3 +40,8 @@ def iris(param):
     print(str(predict))
 
     return str(predict)
+
+@app.route('/show_image')
+def show_image():
+    return '<img src="static/cook.jpg" alt="cooking2">'
+    
