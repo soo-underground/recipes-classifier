@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, abort, redirect, url_for
 from flask.logging import create_logger
 import numpy as np
 from sklearn import datasets
@@ -47,17 +47,23 @@ def show_image():
 
 @app.route('/iris_post', methods=['POST'])
 def iris_post():
-    content = request.get_json()
 
-    param = content['flower'].split(',')
-    param = [float(param) for param in param]
+    try:
+        content = request.get_json()
 
-    param = np.array(param).reshape(1,-1)
-    predict = knn.predict(param)
+        param = content['flower'].split(',')
+        param = [float(param) for param in param]
 
-    predict = {'class':str(predict[0])}
+        param = np.array(param).reshape(1,-1)
+        predict = knn.predict(param)
+
+        predict = {'class':str(predict[0])}
+    except:
+        return redirect(url_for('bad_request'))
 
     return jsonify(predict)
 
-
+@app.route('/badrequest400')
+def bad_request():
+    return abort(400)
     
