@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask.logging import create_logger
 import numpy as np
 from sklearn import datasets
@@ -44,4 +44,20 @@ def iris(param):
 @app.route('/show_image')
 def show_image():
     return '<img src="static/cook.jpg" alt="cooking2">'
+
+@app.route('/iris_post', methods=['POST'])
+def iris_post():
+    content = request.get_json()
+
+    param = content['flower'].split(',')
+    param = [float(param) for param in param]
+
+    param = np.array(param).reshape(1,-1)
+    predict = knn.predict(param)
+
+    predict = {'class':str(predict[0])}
+
+    return jsonify(predict)
+
+
     
