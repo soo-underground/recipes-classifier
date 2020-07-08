@@ -1,13 +1,21 @@
-from flask import Flask, request, jsonify, abort, redirect, url_for
+from flask import Flask, request, jsonify, abort, redirect, url_for, render_template
 from flask.logging import create_logger
 import numpy as np
 from sklearn import datasets
 from sklearn.neighbors import KNeighborsClassifier
 from joblib import dump, load
+from flask_wtf import FlaskForm
+from wtforms import StringField
+from wtforms.validators import DataRequired
+import os
+
+
 
 app = Flask(__name__)
 LOG = create_logger(app)
 knn = load('knn.pkl')
+SECRET_KEY = os.urandom(32)
+app.config['SECRET_KEY'] = SECRET_KEY
 
 @app.route('/')
 def hello_world():
@@ -65,5 +73,19 @@ def iris_post():
 
 @app.route('/badrequest400')
 def bad_request():
-    return abort(400)
+    return abort(400) 
+
+class MyForm(FlaskForm):
+    name = StringField('name', validators=[DataRequired()])
     
+@app.route('/submit', methods=('GET', 'POST'))
+def submit():
+    form = MyForm()
+    if form.validate_on_submit():
+        print(str(form.name))
+        return ('nice')
+    return render_template('submit.html', form=form)
+
+@app.route('/success', methods=['GET', 'POST'])
+def success():
+    return ('nice')
