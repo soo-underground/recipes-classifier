@@ -21,7 +21,7 @@ CORS(app)
 app.config['JSON_AS_ASCII'] = False
 
 with open('YaTranslateKey.key', 'r') as file:
-    auth = file.read().replace('\n', '')  #reading api key for machine translation of texts
+    auth_token = file.read().replace('\n', '')  #reading api key for machine translation of texts
 
 # functions that read pickled ml models
 def load_classifier():
@@ -64,6 +64,10 @@ nltk.download('wordnet')
 nltk.download('punkt')
 stop_words = set(stopwords.words('english'))
 
+classifier = load_classifier()
+tfidf = load_tfidf()
+binarizer = load_binarizer()
+
 
 def remove_stopwords(text):
     no_stopword_text = [w for w in text.split() if not w in stop_words]
@@ -72,34 +76,28 @@ def remove_stopwords(text):
 # main endpoint
 @app.route('/predict', methods=['POST'])
 def predict():
-    global auth #using yandex.translate api key
     request_json = request.get_json()
     x = str(request_json['input'])
-    string = 'https://translate.yandex.net/api/v1.5/tr.json/translate?key=' + \
-        auth + '&text=' + x + '&lang=ru-en'
-    r = requests.get(string)
-    text = r.text[36:] #quick hack used instead of parsing ya.translate json
-    text = text.strip('"]}') #quick hack used instead of parsing ya.translate json
-    text = re.sub(",", "", text)
-    x = text
-    print(x) #print for heroku logs
+    print(x)
 
-    classifier = load_classifier()
-    tfidf = load_tfidf()
-    binarizer = load_binarizer()
-    x = clean_text(x)
-    x = remove_stopwords(x)
-    x = lemmatize_text(x)
-    q_vec = tfidf.transform([x])
+    r = requests.post('https://fasttranslator.herokuapp.com/api/v1/text/to/text', 
+        data = {'source':x, 'lang':'ru-en', 'as':'json'})
+
+    recipe_text = str(r.json().get("data"))
+    recipe_text = re.sub(",", "", recipe_text)
+    recipe_text = clean_text(recipe_text)
+    recipe_text = remove_stopwords(recipe_text)
+    recipe_text = lemmatize_text(recipe_text)
+    q_vec = tfidf.transform([recipe_text])
     q_pred = classifier.predict_proba(q_vec) #getting probabilities of all labels for given recipe text
 
     suggested_labels = []
-    counter = 0
+    class_num = 0
     for x in binarizer.classes_: #leaving only labels that have probabilities more than 0.75%
-        proba = round(q_pred[0][counter], 2)
+        proba = q_pred[0][class_num]
         if proba > 0.75:
             suggested_labels.append(str(x))
-        counter += 1
+        class_num += 1
     prediction = suggested_labels
 
     prediction = str(prediction).strip('[()]').replace("'", "")
