@@ -1,4 +1,5 @@
 # Классификатор рецептов
+https://recipes-classifier-front.herokuapp.com/
 
 *Work in progress*
 
