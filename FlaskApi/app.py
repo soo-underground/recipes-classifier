@@ -15,13 +15,21 @@ from sklearn.multiclass import OneVsRestClassifier
 from sklearn.metrics import f1_score
 import requests
 from string import punctuation
+from ibm_watson import LanguageTranslatorV3
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+
+#import sys
+#print(sys.path)
 
 app = Flask(__name__)
 CORS(app)
 app.config['JSON_AS_ASCII'] = False
 
-with open('YaTranslateKey.key', 'r') as file:
-    auth_token = file.read().replace('\n', '')  #reading api key for machine translation of texts
+with open('IBMkey.key', 'r') as file:
+    APIkey = file.read().replace('\n', '')  #reading api key for machine translation of texts
+with open('IBMurl.key', 'r') as file:
+    APIurl = file.read().replace('\n', '')  #reading api key for machine translation of texts
+
 
 # functions that read pickled ml models
 def load_classifier():
@@ -80,10 +88,18 @@ def predict():
     x = str(request_json['input'])
     print(x)
 
-    r = requests.post('https://fasttranslator.herokuapp.com/api/v1/text/to/text', 
-        data = {'source':x, 'lang':'ru-en', 'as':'json'})
+    authenticator = IAMAuthenticator(APIkey)
+    language_translator = LanguageTranslatorV3(
+        version='2018-05-01',
+        authenticator=authenticator
+    )
+    language_translator.set_service_url(APIurl)
+    translation = language_translator.translate(
+        text=x,
+        model_id='ru-en').get_result()
+    watsonResp = json.loads(json.dumps(translation))['translations'][0]['translation']
 
-    recipe_text = str(r.json().get("data"))
+    recipe_text = str(watsonResp)
     print(recipe_text)
     recipe_text = re.sub(",", "", recipe_text)
     recipe_text = clean_text(recipe_text)

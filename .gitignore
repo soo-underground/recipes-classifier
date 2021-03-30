@@ -9,4 +9,6 @@ data/
 jupyter notebooks/.ipynb_checkpoints
 front-small.png
 FlaskApi/YaTranslateKey.key
+FlaskApi/IBMkey.key
+FlaskApi/IBMurl.key
 docker-experiments/__pycache__

@@ -8,3 +8,4 @@ gunicorn
 requests
 nltk
 sklearn
+ibm_watson
