@@ -84,6 +84,7 @@ def predict():
         data = {'source':x, 'lang':'ru-en', 'as':'json'})
 
     recipe_text = str(r.json().get("data"))
+    print(recipe_text)
     recipe_text = re.sub(",", "", recipe_text)
     recipe_text = clean_text(recipe_text)
     recipe_text = remove_stopwords(recipe_text)
